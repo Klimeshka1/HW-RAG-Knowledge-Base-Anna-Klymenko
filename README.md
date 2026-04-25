@@ -78,6 +78,7 @@ Open [http://localhost:8501](http://localhost:8501).
 ├── chroma_db/         # Persistent vector store (committed after ingestion)
 ├── ingest.py          # PDF → chunks → embeddings → ChromaDB
 ├── app.py             # Streamlit web UI
+├── translations.py    # UI strings in EN / UK / SL
 ├── requirements.txt
 ├── .env.example
 └── README.md
