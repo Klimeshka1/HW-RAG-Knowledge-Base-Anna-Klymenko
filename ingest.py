@@ -95,6 +95,12 @@ def ingest_books(reset: bool = False) -> None:
         persist_directory=str(CHROMA_DIR),
     )
 
+    # Collect already-ingested book titles to skip duplicates
+    existing = vectorstore.get(include=["metadatas"])
+    already_ingested = {m.get("book_title") for m in existing["metadatas"] if m.get("book_title")}
+    if already_ingested:
+        print(f"[INFO] Already in DB: {len(already_ingested)} book(s) — will skip them.")
+
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE_CHARS,
         chunk_overlap=CHUNK_OVERLAP_CHARS,
@@ -106,6 +112,11 @@ def ingest_books(reset: bool = False) -> None:
 
     for pdf_path in pdf_files:
         book_title = clean_filename(pdf_path.name)
+
+        if book_title in already_ingested:
+            print(f"\n[SKIP] Already ingested: {book_title}")
+            continue
+
         print(f"\nProcessing: {book_title}")
 
         pages = load_pdf(pdf_path)
@@ -128,7 +139,11 @@ def ingest_books(reset: bool = False) -> None:
         print(f"  Pages readable: {len(pages)} | Chunks created: {len(chunks)}")
 
         if chunks:
-            vectorstore.add_documents(chunks)
+            # Send in batches to stay within OpenAI's 300k tokens/request limit
+            batch_size = 50
+            for i in range(0, len(chunks), batch_size):
+                batch = chunks[i:i + batch_size]
+                vectorstore.add_documents(batch)
             total_chunks += len(chunks)
             print(f"  Stored {len(chunks)} chunks to ChromaDB.")
 
