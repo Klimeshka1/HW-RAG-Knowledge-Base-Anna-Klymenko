@@ -91,7 +91,8 @@ def inject_css():
 
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-    #MainMenu, footer, header { visibility: hidden; }
+    #MainMenu, footer { visibility: hidden; }
+    header[data-testid="stHeader"] { display: none !important; height: 0 !important; }
 
     /* Hide all sidebar collapse/expand buttons */
     [data-testid="collapsedControl"],
@@ -175,13 +176,14 @@ def inject_css():
 
     section[data-testid="stSidebar"],
     section[data-testid="stSidebar"] > div,
-    section[data-testid="stSidebar"] > div > div {
+    section[data-testid="stSidebar"] > div > div,
+    [data-testid="stSidebarContent"] {
         background: #1a3c5e !important;
         padding-top: 0 !important;
         margin-top: 0 !important;
     }
-    section[data-testid="stSidebar"] > div:first-child {
-        padding-top: 1rem !important;
+    [data-testid="stSidebarContent"] {
+        padding-top: 1.5rem !important;
     }
 
     /* Sidebar toggle button — always on top */
