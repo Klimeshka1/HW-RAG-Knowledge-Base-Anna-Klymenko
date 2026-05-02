@@ -93,9 +93,15 @@ def inject_css():
 
     #MainMenu, footer, header { visibility: hidden; }
 
-    /* Hide the sidebar collapse/expand button */
+    /* Hide all sidebar collapse/expand buttons */
     [data-testid="collapsedControl"],
-    button[kind="header"] { display: none !important; }
+    [data-testid="baseButton-headerNoPadding"],
+    button[kind="header"],
+    .st-emotion-cache-dvne4q,
+    section[data-testid="stSidebar"] button[aria-label="Close sidebar"],
+    section[data-testid="stSidebar"] button[aria-label="Collapse sidebar"] {
+        display: none !important;
+    }
 
     .hero {
         background: linear-gradient(135deg, #1a3c5e 0%, #2d6a9f 100%);
