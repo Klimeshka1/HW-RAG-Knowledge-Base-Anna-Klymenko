@@ -91,8 +91,13 @@ def inject_css():
 
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-    #MainMenu, footer { visibility: hidden; }
-    header[data-testid="stHeader"] { display: none !important; height: 0 !important; }
+    #MainMenu, footer, header { visibility: hidden; }
+    header[data-testid="stHeader"] {
+        height: 0 !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
 
     /* Hide all sidebar collapse/expand buttons */
     [data-testid="collapsedControl"],
