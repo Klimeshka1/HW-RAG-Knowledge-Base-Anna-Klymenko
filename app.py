@@ -169,6 +169,19 @@ def inject_css():
     section[data-testid="stSidebar"] > div > div {
         background: #1a3c5e !important;
     }
+
+    /* Always show the sidebar toggle button */
+    [data-testid="collapsedControl"] {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        background: #1a3c5e !important;
+        border-radius: 0 8px 8px 0 !important;
+        color: white !important;
+    }
+    [data-testid="collapsedControl"] svg {
+        fill: white !important;
+    }
     section[data-testid="stSidebar"] * { color: white !important; }
     section[data-testid="stSidebar"] .stSelectbox > div > div {
         background: #2d5a8a; border: 1px solid #4a7baa; border-radius: 8px;
