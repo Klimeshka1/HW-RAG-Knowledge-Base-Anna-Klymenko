@@ -182,8 +182,38 @@ def get_stats(_vectorstore):
     return dict(chunk_counts), len(result["metadatas"])
 
 
+LANG_NAMES = {"en": "English", "uk": "Ukrainian", "sl": "Slovenian"}
+
+
 def search(vectorstore, query):
     return vectorstore.similarity_search(query, k=TOP_K)
+
+
+def translate_chunks(llm, chunks: list, lang_code: str) -> list[str]:
+    if lang_code == "en":
+        return [doc.page_content for doc in chunks]
+
+    lang_name = LANG_NAMES[lang_code]
+    numbered = "\n\n".join(
+        f"[{i+1}]\n{doc.page_content}" for i, doc in enumerate(chunks)
+    )
+    response = llm.invoke([
+        SystemMessage(content=(
+            f"Translate each numbered text block to {lang_name}. "
+            "Keep the [1], [2], ... markers. Return ONLY the translated blocks, nothing else."
+        )),
+        HumanMessage(content=numbered),
+    ])
+    raw = response.content
+    translated = []
+    for i in range(len(chunks)):
+        marker = f"[{i+1}]"
+        next_marker = f"[{i+2}]"
+        start = raw.find(marker)
+        end = raw.find(next_marker) if i + 1 < len(chunks) else len(raw)
+        block = raw[start + len(marker):end].strip() if start != -1 else chunks[i].page_content
+        translated.append(block)
+    return translated
 
 
 def generate_answer(llm, query, chunks, system_prompt):
@@ -253,16 +283,19 @@ if page == "🔍 Search":
                             unsafe_allow_html=True)
                 st.markdown(f'<div class="answer-box">{answer}</div>', unsafe_allow_html=True)
 
+            with st.spinner(t.get("spinner_translate", "Translating passages...")):
+                translated_texts = translate_chunks(llm, results, lang_code)
+
             st.markdown(
                 f'<div class="section-title">📖 {t["header_results"].format(n=len(results))}</div>',
                 unsafe_allow_html=True,
             )
-            for i, doc in enumerate(results, start=1):
+            for i, (doc, text) in enumerate(zip(results, translated_texts), start=1):
                 book = unicodedata.normalize("NFC", doc.metadata.get("book_title", "Unknown book"))
                 display = BOOK_DISPLAY_NAMES.get(book, book)
                 page_num = doc.metadata.get("page_number", "?")
                 with st.expander(f"{i}. {display} — {t['page_label']} {page_num}"):
-                    st.write(doc.page_content)
+                    st.write(text)
 
     elif submitted:
         st.warning(t["warn_empty_query"])
