@@ -29,29 +29,29 @@ TOP_K = 5
 
 # Clean display names for each internal ChromaDB title
 BOOK_DISPLAY_NAMES = {
-    '101 Способ Создания Новых Источников Дохода. Как Зарабатывать На Всем И Всегда (Epub)   Флибуста': '101 Ways to Create New Income Streams (RU)',
-    'Ilina Lichnye Finansy Dlya Teh Kto Hochet Vse Uspet.626332': 'Personal Finance — Ilina (RU)',
-    'Thomas J. Stanley  Sarah Stanley Fallaw   The Next Millionaire Next Door  Enduring Strategies For Building Wealth (2018, Lyons Press)   Libgen.Li': 'The Next Millionaire Next Door (ENG)',
-    '[Little Book Big Profits] John C Bogle   The Little Book Of Common Sense Investing   The Only Way To Guarantee Your Fair Share Of Market Returns (2007, John Wiley & Sons )   Libgen.Li': 'The Little Book of Common Sense Investing (ENG)',
-    'Богатый Папа, Бедный Папа (Fb2)   Флибуста': 'Rich Dad Poor Dad (RU)',
-    'Девушка С Деньгами (Fb2)   Флибуста': 'Girl with Money (RU)',
-    'Кошелек Или Жизнь  (Fb2)   Флибуста': 'Your Money or Your Life (RU)',
-    'Основы Финансовой Грамотности  Краткий Курс (Fb2)   Флибуста': 'Fundamentals of Financial Literacy (RU)',
-    'Правила Богатой Бабушки. Финансовая Грамотность Для Жизни Вашей Мечты (Fb2)   Флибуста': 'Rules of a Rich Grandmother (RU)',
-    'Разумное Страхование. Актуальные Рыночные Практики{Бирюков С.}{111952649} Libgen.Li': 'Smart Insurance — Biryukov (RU)',
+    '101 Способ Создания Новых Источников Дохода. Как Зарабатывать На Всем И Всегда (Epub)   Флибуста': '101 Ways to Create New Income Streams (RU) — 54 pages',
+    'Ilina Lichnye Finansy Dlya Teh Kto Hochet Vse Uspet.626332': 'Personal Finance — Ilina (RU) — 129 pages',
+    'Thomas J. Stanley  Sarah Stanley Fallaw   The Next Millionaire Next Door  Enduring Strategies For Building Wealth (2018, Lyons Press)   Libgen.Li': 'The Next Millionaire Next Door (ENG) — 273 pages',
+    '[Little Book Big Profits] John C Bogle   The Little Book Of Common Sense Investing   The Only Way To Guarantee Your Fair Share Of Market Returns (2007, John Wiley & Sons )   Libgen.Li': 'The Little Book of Common Sense Investing (ENG) — 236 pages',
+    'Богатый Папа, Бедный Папа (Fb2)   Флибуста': 'Rich Dad Poor Dad (RU) — 97 pages',
+    'Девушка С Деньгами (Fb2)   Флибуста': 'Girl with Money (RU) — 83 pages',
+    'Кошелек Или Жизнь  (Fb2)   Флибуста': 'Your Money or Your Life (RU) — 130 pages',
+    'Основы Финансовой Грамотности  Краткий Курс (Fb2)   Флибуста': 'Fundamentals of Financial Literacy (RU) — 141 pages',
+    'Правила Богатой Бабушки. Финансовая Грамотность Для Жизни Вашей Мечты (Fb2)   Флибуста': 'Rules of a Rich Grandmother (RU) — 80 pages',
+    'Разумное Страхование. Актуальные Рыночные Практики{Бирюков С.}{111952649} Libgen.Li': 'Smart Insurance — Biryukov (RU) — 277 pages',
 }
 
 BOOK_LANGUAGES = {
-    "101 Ways to Create New Income Streams (RU)": "Russian",
-    "Personal Finance — Ilina (RU)": "Russian",
-    "The Next Millionaire Next Door (ENG)": "English",
-    "The Little Book of Common Sense Investing (ENG)": "English",
-    "Rich Dad Poor Dad (RU)": "Russian",
-    "Girl with Money (RU)": "Russian",
-    "Your Money or Your Life (RU)": "Russian",
-    "Fundamentals of Financial Literacy (RU)": "Russian",
-    "Rules of a Rich Grandmother (RU)": "Russian",
-    "Smart Insurance — Biryukov (RU)": "Russian",
+    "101 Ways to Create New Income Streams (RU) — 54 pages": "Russian",
+    "Personal Finance — Ilina (RU) — 129 pages": "Russian",
+    "The Next Millionaire Next Door (ENG) — 273 pages": "English",
+    "The Little Book of Common Sense Investing (ENG) — 236 pages": "English",
+    "Rich Dad Poor Dad (RU) — 97 pages": "Russian",
+    "Girl with Money (RU) — 83 pages": "Russian",
+    "Your Money or Your Life (RU) — 130 pages": "Russian",
+    "Fundamentals of Financial Literacy (RU) — 141 pages": "Russian",
+    "Rules of a Rich Grandmother (RU) — 80 pages": "Russian",
+    "Smart Insurance — Biryukov (RU) — 277 pages": "Russian",
 }
 
 
