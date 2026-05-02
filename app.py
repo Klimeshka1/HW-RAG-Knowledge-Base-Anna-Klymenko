@@ -164,7 +164,15 @@ def inject_css():
     .stat-number { font-size: 2.2rem; font-weight: 700; color: #2d6a9f; }
     .stat-label { font-size: 0.9rem; color: #718096; margin-top: 0.2rem; }
 
-    section[data-testid="stSidebar"] { background: #1a3c5e; }
+    section[data-testid="stSidebar"] {
+        background: #1a3c5e;
+        min-height: 100vh;
+        height: 100%;
+    }
+    section[data-testid="stSidebar"] > div:first-child {
+        background: #1a3c5e;
+        min-height: 100vh;
+    }
     section[data-testid="stSidebar"] * { color: white !important; }
     section[data-testid="stSidebar"] .stSelectbox > div > div {
         background: #2d5a8a; border: 1px solid #4a7baa; border-radius: 8px;
