@@ -177,6 +177,11 @@ def inject_css():
     section[data-testid="stSidebar"] > div,
     section[data-testid="stSidebar"] > div > div {
         background: #1a3c5e !important;
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+    section[data-testid="stSidebar"] > div:first-child {
+        padding-top: 1rem !important;
     }
 
     /* Sidebar toggle button — always on top */
