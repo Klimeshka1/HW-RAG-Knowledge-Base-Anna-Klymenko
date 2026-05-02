@@ -372,19 +372,19 @@ elif page == "📊 Statistics":
     # ── Top metrics ──
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown(f'<div class="stat-card"><div class="stat-number">10</div><div class="stat-label">Books</div></div>',
+        st.markdown(f'<div class="stat-card"><div class="stat-number">10</div><div class="stat-label">{t["stat_books"]}</div></div>',
                     unsafe_allow_html=True)
     with col2:
-        st.markdown(f'<div class="stat-card"><div class="stat-number">{total_chunks:,}</div><div class="stat-label">Total chunks</div></div>',
+        st.markdown(f'<div class="stat-card"><div class="stat-number">{total_chunks:,}</div><div class="stat-label">{t["stat_chunks"]}</div></div>',
                     unsafe_allow_html=True)
     with col3:
-        st.markdown(f'<div class="stat-card"><div class="stat-number">3</div><div class="stat-label">UI languages</div></div>',
+        st.markdown(f'<div class="stat-card"><div class="stat-number">3</div><div class="stat-label">{t["stat_languages"]}</div></div>',
                     unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     # ── Bar chart: chunks per book ──
-    st.subheader("Chunks per book")
+    st.subheader(t["stat_chunks_per_book"])
     books = list(display_counts.keys())
     counts = list(display_counts.values())
     fig_bar = px.bar(
@@ -407,7 +407,7 @@ elif page == "📊 Statistics":
     st.plotly_chart(fig_bar, use_container_width=True)
 
     # ── Pie chart: language distribution ──
-    st.subheader("Language distribution")
+    st.subheader(t["stat_lang_distribution"])
     lang_counts = Counter(
         BOOK_LANGUAGES.get(name, "Unknown") for name in display_counts.keys()
     )
@@ -431,17 +431,10 @@ elif page == "📊 Statistics":
 # PAGE: ABOUT
 # ══════════════════════════════════════════════════════════════════════════════
 elif page == "ℹ️ About":
-    st.markdown("## About this app")
-    st.markdown("""
-This application is a **RAG (Retrieval-Augmented Generation)** knowledge base
-built on a collection of 10 financial literacy books in Russian and English.
+    st.markdown(f"## {t['about_title']}")
+    st.markdown(t["about_description"])
 
-Type a question in natural language — the app finds the most relevant passages
-from the books using semantic search, and optionally generates a concise answer
-using GPT-4o-mini.
-    """)
-
-    st.markdown("## Tech stack")
+    st.markdown(f"## {t['about_stack']}")
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("""
@@ -462,11 +455,11 @@ using GPT-4o-mini.
 | Source control | GitHub |
         """)
 
-    st.markdown("## Links")
+    st.markdown(f"## {t['about_links']}")
     st.markdown("""
 - 🐙 **GitHub:** https://github.com/Klimeshka1/HW-RAG-Knowledge-Base-Anna-Klymenko
 - 🌐 **Live app:** https://hw-rag-knowledge-base-anna-klymenko.onrender.com
     """)
 
-    st.markdown("## Author")
-    st.markdown("**Anna Klymenko** — university project, 2026")
+    st.markdown(f"## {t['about_author']}")
+    st.markdown(t["about_author_text"])
