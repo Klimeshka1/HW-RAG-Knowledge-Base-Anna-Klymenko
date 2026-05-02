@@ -95,11 +95,10 @@ def inject_css():
 
     /* Hide all sidebar collapse/expand buttons */
     [data-testid="collapsedControl"],
+    [data-testid="stSidebarCollapseButton"],
     [data-testid="baseButton-headerNoPadding"],
-    button[kind="header"],
-    .st-emotion-cache-dvne4q,
-    section[data-testid="stSidebar"] button[aria-label="Close sidebar"],
-    section[data-testid="stSidebar"] button[aria-label="Collapse sidebar"] {
+    button[kind="headerNoPadding"],
+    button[kind="header"] {
         display: none !important;
     }
 
