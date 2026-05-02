@@ -217,9 +217,6 @@ def search(vectorstore, query):
 
 
 def translate_chunks(llm, chunks: list, lang_code: str) -> list[str]:
-    if lang_code == "en":
-        return [doc.page_content for doc in chunks]
-
     lang_name = LANG_NAMES[lang_code]
     numbered = "\n\n".join(
         f"[{i+1}]\n{doc.page_content}" for i, doc in enumerate(chunks)
