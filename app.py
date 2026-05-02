@@ -79,8 +79,9 @@ def inject_css():
             position: fixed;
             inset: 0;
             background: rgba(255, 255, 255, 0.72);
-            z-index: -1;
+            z-index: 0;
         }}
+        .stApp > * {{ position: relative; z-index: 1; }}
         </style>
         """, unsafe_allow_html=True)
 
@@ -91,12 +92,6 @@ def inject_css():
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
     #MainMenu, footer, header { visibility: hidden; }
-    header[data-testid="stHeader"] {
-        height: 0 !important;
-        min-height: 0 !important;
-        padding: 0 !important;
-        overflow: hidden !important;
-    }
 
     /* Hide all sidebar collapse/expand buttons */
     [data-testid="collapsedControl"],
@@ -180,13 +175,8 @@ def inject_css():
 
     section[data-testid="stSidebar"],
     section[data-testid="stSidebar"] > div,
-    section[data-testid="stSidebar"] > div > div,
-    [data-testid="stSidebarContent"] {
+    section[data-testid="stSidebar"] > div > div {
         background: #1a3c5e !important;
-    }
-    section[data-testid="stSidebar"] {
-        padding-top: 0 !important;
-        margin-top: 0 !important;
     }
 
     /* Sidebar toggle button — always on top */
