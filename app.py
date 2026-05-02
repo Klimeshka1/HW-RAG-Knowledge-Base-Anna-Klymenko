@@ -174,26 +174,18 @@ def inject_css():
     .stat-number { font-size: 2.2rem; font-weight: 700; color: #2d6a9f; }
     .stat-label { font-size: 0.9rem; color: #718096; margin-top: 0.2rem; }
 
-    section[data-testid="stSidebar"] {
-        background: #1a3c5e !important;
-        padding-top: 0 !important;
-        margin-top: 0 !important;
-        height: 100vh !important;
-        position: sticky !important;
-        top: 0 !important;
-    }
-    section[data-testid="stSidebar"] > div {
-        background: #1a3c5e !important;
-        padding-top: 0 !important;
-        margin-top: 0 !important;
-        height: 100% !important;
-        overflow-y: auto !important;
-    }
+    section[data-testid="stSidebar"],
+    section[data-testid="stSidebar"] > div,
     section[data-testid="stSidebar"] > div > div,
-    [data-testid="stSidebarContent"] {
+    [data-testid="stSidebarContent"],
+    [data-testid="stSidebarUserContent"] {
         background: #1a3c5e !important;
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+    [data-testid="stSidebarContent"] {
         padding-top: 1.5rem !important;
-        height: 100% !important;
+        min-height: 100vh !important;
     }
 
     /* Sidebar toggle button — always on top */
