@@ -178,19 +178,22 @@ def inject_css():
         background: #1a3c5e !important;
         padding-top: 0 !important;
         margin-top: 0 !important;
-        min-height: 100vh !important;
+        height: 100vh !important;
+        position: sticky !important;
+        top: 0 !important;
     }
-    section[data-testid="stSidebar"] > div,
-    section[data-testid="stSidebar"] > div > div {
+    section[data-testid="stSidebar"] > div {
         background: #1a3c5e !important;
         padding-top: 0 !important;
         margin-top: 0 !important;
-        min-height: 100vh !important;
+        height: 100% !important;
+        overflow-y: auto !important;
     }
+    section[data-testid="stSidebar"] > div > div,
     [data-testid="stSidebarContent"] {
         background: #1a3c5e !important;
         padding-top: 1.5rem !important;
-        min-height: 100vh !important;
+        height: 100% !important;
     }
 
     /* Sidebar toggle button — always on top */
