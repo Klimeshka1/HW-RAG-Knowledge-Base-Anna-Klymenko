@@ -7,6 +7,7 @@ Run: streamlit run app.py
 """
 
 import os
+import base64
 import unicodedata
 from pathlib import Path
 from collections import Counter
@@ -55,14 +56,38 @@ BOOK_LANGUAGES = {
 }
 
 
+def get_base64_image(path: str) -> str:
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+
 def inject_css():
+    bg_path = Path("assets/background.jpg")
+    if bg_path.exists():
+        b64 = get_base64_image(str(bg_path))
+        st.markdown(f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/jpeg;base64,{b64}");
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }}
+        .stApp::before {{
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.72);
+            z-index: -1;
+        }}
+        </style>
+        """, unsafe_allow_html=True)
+
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-
-    .stApp { background: #f0f4f8; }
 
     #MainMenu, footer, header { visibility: hidden; }
 
