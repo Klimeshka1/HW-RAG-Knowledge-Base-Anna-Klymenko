@@ -79,9 +79,8 @@ def inject_css():
             position: fixed;
             inset: 0;
             background: rgba(255, 255, 255, 0.72);
-            z-index: 0;
+            z-index: -1;
         }}
-        .stApp > * {{ position: relative; z-index: 1; }}
         </style>
         """, unsafe_allow_html=True)
 
