@@ -91,9 +91,11 @@ def inject_css():
 
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-    #MainMenu, footer { visibility: hidden; }
-    header { visibility: hidden; }
-    header [data-testid="collapsedControl"] { visibility: visible !important; }
+    #MainMenu, footer, header { visibility: hidden; }
+
+    /* Hide the sidebar collapse/expand button */
+    [data-testid="collapsedControl"],
+    button[kind="header"] { display: none !important; }
 
     .hero {
         background: linear-gradient(135deg, #1a3c5e 0%, #2d6a9f 100%);
