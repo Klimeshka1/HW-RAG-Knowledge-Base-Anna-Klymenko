@@ -7,7 +7,6 @@ Run: streamlit run app.py
 """
 
 import os
-import base64
 import unicodedata
 from pathlib import Path
 from collections import Counter
@@ -56,50 +55,16 @@ BOOK_LANGUAGES = {
 }
 
 
-def get_base64_image(path: str) -> str:
-    with open(path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
-
-
 def inject_css():
-    # Inject background image separately to avoid f-string curly brace conflicts
-    bg_path = Path("assets/background.jpg")
-    if bg_path.exists():
-        b64 = get_base64_image(str(bg_path))
-        st.markdown(f"""
-        <style>
-        .stApp {{
-            background-image: url("data:image/jpeg;base64,{b64}");
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
-        }}
-        .stApp::before {{
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.72);
-            z-index: -1;
-        }}
-        </style>
-        """, unsafe_allow_html=True)
-
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-    #MainMenu, footer, header { visibility: hidden; }
+    .stApp { background: #f0f4f8; }
 
-    /* Hide all sidebar collapse/expand buttons */
-    [data-testid="collapsedControl"],
-    [data-testid="stSidebarCollapseButton"],
-    [data-testid="baseButton-headerNoPadding"],
-    button[kind="headerNoPadding"],
-    button[kind="header"] {
-        display: none !important;
-    }
+    #MainMenu, footer, header { visibility: hidden; }
 
     .hero {
         background: linear-gradient(135deg, #1a3c5e 0%, #2d6a9f 100%);
@@ -172,31 +137,7 @@ def inject_css():
     .stat-number { font-size: 2.2rem; font-weight: 700; color: #2d6a9f; }
     .stat-label { font-size: 0.9rem; color: #718096; margin-top: 0.2rem; }
 
-    section[data-testid="stSidebar"],
-    section[data-testid="stSidebar"] > div,
-    section[data-testid="stSidebar"] > div > div {
-        background: #1a3c5e !important;
-    }
-
-    /* Sidebar toggle button — always on top */
-    [data-testid="collapsedControl"] {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        position: fixed !important;
-        top: 50% !important;
-        left: 0 !important;
-        z-index: 9999 !important;
-        background: #1a3c5e !important;
-        border-radius: 0 8px 8px 0 !important;
-        padding: 0.5rem 0.3rem !important;
-    }
-    [data-testid="collapsedControl"] svg {
-        fill: white !important;
-    }
-    [data-testid="collapsedControl"] button {
-        color: white !important;
-    }
+    section[data-testid="stSidebar"] { background: #1a3c5e; }
     section[data-testid="stSidebar"] * { color: white !important; }
     section[data-testid="stSidebar"] .stSelectbox > div > div {
         background: #2d5a8a; border: 1px solid #4a7baa; border-radius: 8px;
@@ -241,35 +182,8 @@ def get_stats(_vectorstore):
     return dict(chunk_counts), len(result["metadatas"])
 
 
-LANG_NAMES = {"en": "English", "uk": "Ukrainian", "sl": "Slovenian"}
-
-
 def search(vectorstore, query):
     return vectorstore.similarity_search(query, k=TOP_K)
-
-
-def translate_chunks(llm, chunks: list, lang_code: str) -> list[str]:
-    lang_name = LANG_NAMES[lang_code]
-    numbered = "\n\n".join(
-        f"[{i+1}]\n{doc.page_content}" for i, doc in enumerate(chunks)
-    )
-    response = llm.invoke([
-        SystemMessage(content=(
-            f"Translate each numbered text block to {lang_name}. "
-            "Keep the [1], [2], ... markers. Return ONLY the translated blocks, nothing else."
-        )),
-        HumanMessage(content=numbered),
-    ])
-    raw = response.content
-    translated = []
-    for i in range(len(chunks)):
-        marker = f"[{i+1}]"
-        next_marker = f"[{i+2}]"
-        start = raw.find(marker)
-        end = raw.find(next_marker) if i + 1 < len(chunks) else len(raw)
-        block = raw[start + len(marker):end].strip() if start != -1 else chunks[i].page_content
-        translated.append(block)
-    return translated
 
 
 def generate_answer(llm, query, chunks, system_prompt):
@@ -339,19 +253,16 @@ if page == "🔍 Search":
                             unsafe_allow_html=True)
                 st.markdown(f'<div class="answer-box">{answer}</div>', unsafe_allow_html=True)
 
-            with st.spinner(t.get("spinner_translate", "Translating passages...")):
-                translated_texts = translate_chunks(llm, results, lang_code)
-
             st.markdown(
                 f'<div class="section-title">📖 {t["header_results"].format(n=len(results))}</div>',
                 unsafe_allow_html=True,
             )
-            for i, (doc, text) in enumerate(zip(results, translated_texts), start=1):
+            for i, doc in enumerate(results, start=1):
                 book = unicodedata.normalize("NFC", doc.metadata.get("book_title", "Unknown book"))
                 display = BOOK_DISPLAY_NAMES.get(book, book)
                 page_num = doc.metadata.get("page_number", "?")
                 with st.expander(f"{i}. {display} — {t['page_label']} {page_num}"):
-                    st.write(text)
+                    st.write(doc.page_content)
 
     elif submitted:
         st.warning(t["warn_empty_query"])
@@ -371,19 +282,19 @@ elif page == "📊 Statistics":
     # ── Top metrics ──
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown(f'<div class="stat-card"><div class="stat-number">10</div><div class="stat-label">{t["stat_books"]}</div></div>',
+        st.markdown(f'<div class="stat-card"><div class="stat-number">10</div><div class="stat-label">Books</div></div>',
                     unsafe_allow_html=True)
     with col2:
-        st.markdown(f'<div class="stat-card"><div class="stat-number">{total_chunks:,}</div><div class="stat-label">{t["stat_chunks"]}</div></div>',
+        st.markdown(f'<div class="stat-card"><div class="stat-number">{total_chunks:,}</div><div class="stat-label">Total chunks</div></div>',
                     unsafe_allow_html=True)
     with col3:
-        st.markdown(f'<div class="stat-card"><div class="stat-number">3</div><div class="stat-label">{t["stat_languages"]}</div></div>',
+        st.markdown(f'<div class="stat-card"><div class="stat-number">3</div><div class="stat-label">UI languages</div></div>',
                     unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     # ── Bar chart: chunks per book ──
-    st.subheader(t["stat_chunks_per_book"])
+    st.subheader("Chunks per book")
     books = list(display_counts.keys())
     counts = list(display_counts.values())
     fig_bar = px.bar(
@@ -406,7 +317,7 @@ elif page == "📊 Statistics":
     st.plotly_chart(fig_bar, use_container_width=True)
 
     # ── Pie chart: language distribution ──
-    st.subheader(t["stat_lang_distribution"])
+    st.subheader("Language distribution")
     lang_counts = Counter(
         BOOK_LANGUAGES.get(name, "Unknown") for name in display_counts.keys()
     )
@@ -430,10 +341,17 @@ elif page == "📊 Statistics":
 # PAGE: ABOUT
 # ══════════════════════════════════════════════════════════════════════════════
 elif page == "ℹ️ About":
-    st.markdown(f"## {t['about_title']}")
-    st.markdown(t["about_description"])
+    st.markdown("## About this app")
+    st.markdown("""
+This application is a **RAG (Retrieval-Augmented Generation)** knowledge base
+built on a collection of 10 financial literacy books in Russian and English.
 
-    st.markdown(f"## {t['about_stack']}")
+Type a question in natural language — the app finds the most relevant passages
+from the books using semantic search, and optionally generates a concise answer
+using GPT-4o-mini.
+    """)
+
+    st.markdown("## Tech stack")
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("""
@@ -454,11 +372,11 @@ elif page == "ℹ️ About":
 | Source control | GitHub |
         """)
 
-    st.markdown(f"## {t['about_links']}")
+    st.markdown("## Links")
     st.markdown("""
 - 🐙 **GitHub:** https://github.com/Klimeshka1/HW-RAG-Knowledge-Base-Anna-Klymenko
 - 🌐 **Live app:** https://hw-rag-knowledge-base-anna-klymenko.onrender.com
     """)
 
-    st.markdown(f"## {t['about_author']}")
-    st.markdown(t["about_author_text"])
+    st.markdown("## Author")
+    st.markdown("**Anna Klymenko** — university project, 2026")
