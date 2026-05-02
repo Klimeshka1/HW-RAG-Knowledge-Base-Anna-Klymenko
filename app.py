@@ -91,7 +91,9 @@ def inject_css():
 
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-    #MainMenu, footer, header { visibility: hidden; }
+    #MainMenu, footer { visibility: hidden; }
+    header { visibility: hidden; }
+    header [data-testid="collapsedControl"] { visibility: visible !important; }
 
     .hero {
         background: linear-gradient(135deg, #1a3c5e 0%, #2d6a9f 100%);
