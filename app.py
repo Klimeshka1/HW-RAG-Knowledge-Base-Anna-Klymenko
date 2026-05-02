@@ -7,6 +7,7 @@ Run: streamlit run app.py
 """
 
 import os
+import unicodedata
 from pathlib import Path
 from collections import Counter
 
@@ -28,16 +29,16 @@ TOP_K = 5
 
 # Clean display names for each internal ChromaDB title
 BOOK_DISPLAY_NAMES = {
-    "101 Способ Создания Новых Источников Дохода. Как Зарабатывать На Всем И Всегда (Epub)   Флибуста": "101 Ways to Create New Income Streams",
-    "Ilina Lichnye Finansy Dlya Teh Kto Hochet Vse Uspet.626332": "Personal Finance — Ilina",
-    "Thomas J. Stanley  Sarah Stanley Fallaw   The Next Millionaire Next Door  Enduring Strategies For Building Wealth (2018, Lyons Press)   Libgen.Li": "The Next Millionaire Next Door",
-    "[Little Book Big Profits] John C Bogle   The Little Book Of Common Sense Investing   The Only Way To Guarantee Your Fair Share Of Market Returns (2007, John Wiley & Sons )   Libgen.Li": "The Little Book of Common Sense Investing",
-    "Богатый Папа, Бедный Папа (Fb2)   Флибуста": "Rich Dad Poor Dad",
-    "Девушка С Деньгами (Fb2)   Флибуста": "Girl with Money",
-    "Кошелек Или Жизнь  (Fb2)   Флибуста": "Your Money or Your Life",
-    "Основы Финансовой Грамотности  Краткий Курс (Fb2)   Флибуста": "Fundamentals of Financial Literacy",
-    "Правила Богатой Бабушки. Финансовая Грамотность Для Жизни Вашей Мечты (Fb2)   Флибуста": "Rules of a Rich Grandmother",
-    "Разумное Страхование. Актуальные Рыночные Практики{Бирюков С.}{111952649} Libgen.Li": "Smart Insurance — Biryukov",
+    '101 Способ Создания Новых Источников Дохода. Как Зарабатывать На Всем И Всегда (Epub)   Флибуста': '101 Ways to Create New Income Streams',
+    'Ilina Lichnye Finansy Dlya Teh Kto Hochet Vse Uspet.626332': 'Personal Finance — Ilina',
+    'Thomas J. Stanley  Sarah Stanley Fallaw   The Next Millionaire Next Door  Enduring Strategies For Building Wealth (2018, Lyons Press)   Libgen.Li': 'The Next Millionaire Next Door',
+    '[Little Book Big Profits] John C Bogle   The Little Book Of Common Sense Investing   The Only Way To Guarantee Your Fair Share Of Market Returns (2007, John Wiley & Sons )   Libgen.Li': 'The Little Book of Common Sense Investing',
+    'Богатый Папа, Бедный Папа (Fb2)   Флибуста': 'Rich Dad Poor Dad',
+    'Девушка С Деньгами (Fb2)   Флибуста': 'Girl with Money',
+    'Кошелек Или Жизнь  (Fb2)   Флибуста': 'Your Money or Your Life',
+    'Основы Финансовой Грамотности  Краткий Курс (Fb2)   Флибуста': 'Fundamentals of Financial Literacy',
+    'Правила Богатой Бабушки. Финансовая Грамотность Для Жизни Вашей Мечты (Fb2)   Флибуста': 'Rules of a Rich Grandmother',
+    'Разумное Страхование. Актуальные Рыночные Практики{Бирюков С.}{111952649} Libgen.Li': 'Smart Insurance — Biryukov',
 }
 
 BOOK_LANGUAGES = {
@@ -175,7 +176,8 @@ def load_llm():
 def get_stats(_vectorstore):
     result = _vectorstore.get(include=["metadatas"])
     chunk_counts = Counter(
-        m.get("book_title", "Unknown") for m in result["metadatas"]
+        unicodedata.normalize("NFC", m.get("book_title", "Unknown"))
+        for m in result["metadatas"]
     )
     return dict(chunk_counts), len(result["metadatas"])
 
@@ -256,7 +258,7 @@ if page == "🔍 Search":
                 unsafe_allow_html=True,
             )
             for i, doc in enumerate(results, start=1):
-                book = doc.metadata.get("book_title", "Unknown book")
+                book = unicodedata.normalize("NFC", doc.metadata.get("book_title", "Unknown book"))
                 display = BOOK_DISPLAY_NAMES.get(book, book)
                 page_num = doc.metadata.get("page_number", "?")
                 with st.expander(f"{i}. {display} — {t['page_label']} {page_num}"):
