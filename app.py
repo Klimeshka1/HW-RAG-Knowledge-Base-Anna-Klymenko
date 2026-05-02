@@ -170,17 +170,24 @@ def inject_css():
         background: #1a3c5e !important;
     }
 
-    /* Always show the sidebar toggle button */
+    /* Sidebar toggle button — always on top */
     [data-testid="collapsedControl"] {
         display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
+        position: fixed !important;
+        top: 50% !important;
+        left: 0 !important;
+        z-index: 9999 !important;
         background: #1a3c5e !important;
         border-radius: 0 8px 8px 0 !important;
-        color: white !important;
+        padding: 0.5rem 0.3rem !important;
     }
     [data-testid="collapsedControl"] svg {
         fill: white !important;
+    }
+    [data-testid="collapsedControl"] button {
+        color: white !important;
     }
     section[data-testid="stSidebar"] * { color: white !important; }
     section[data-testid="stSidebar"] .stSelectbox > div > div {
